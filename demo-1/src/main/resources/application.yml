@@ -1,0 +1,8 @@
+server:
+  port: 8000  servlet:    context-path: /
+
+spring:  datasource:    driver-class-name: com.mysql.cj.jdbc.Driver    url: jdbc:mysql://localhost:3306/cos?serverTimezone=Asia/Seoul    username: cos    password: bitc5600
+
+  jpa:    hibernate:      ddl-auto: create #update, none 최초의 테이블 만들때 create, 다 만들면 update, 안하모 데이터 다날라감      naming:        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#carmel표기법으로 변수명 작성시 db에서 고대로 생성, 요걸로 해야 안헷갈림 걍 이거 고정.
+#다른 방식 사용시 _로 변경해줌.    show-sql: true
