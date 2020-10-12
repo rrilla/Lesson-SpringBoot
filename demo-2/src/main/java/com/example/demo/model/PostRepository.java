@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.demo.dto.PostRequestDto;
 
 public class PostRepository {
+	
 	public static List<Post> 게시글목록() {
 		List<Post> posts = new ArrayList<>();
 		posts.add(new Post(1,"제목1","내용1",0));

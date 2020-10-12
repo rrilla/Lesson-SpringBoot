@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PostRequestDto;
@@ -40,8 +43,9 @@ public class HomeController {
 	}
 	
 	@PutMapping("/post/{id}")
-	public int update(@RequestBody PostRequestDto postRequestDto, @PathVariable int id) {
-		System.out.println("id가 '" + id+"'인 게시글 수정");
+	//HTTP 요청의 내용을 Member 객체에 매핑하기위해 @RequestBody 애너테이션을 설정한다.
+	public int update(PostRequestDto postRequestDto, @PathVariable int id) {
+		System.out.println("id가 '" + id +"'인 게시글 수정");
 		System.out.println(postRequestDto.getTitle());
 		System.out.println(postRequestDto.getContent());
 		return postRepository.게시글수정(postRequestDto);
@@ -51,6 +55,13 @@ public class HomeController {
 	public int delete(@PathVariable int id) {
 		System.out.println("id가 '"+id+"'인 게시글 삭제");
 		return postRepository.게시글삭제(id);
+	}
+	
+	@RequestMapping(value="/test", consumes="application/json",method=RequestMethod.POST)
+	public String test(PostRequestDto postRequestDto) {
+		System.out.println("title : " +postRequestDto.getTitle());
+		System.out.println("content : " +postRequestDto.getContent());
+		return "success";
 	}
 	
 }
