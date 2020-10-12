@@ -8,6 +8,8 @@ public class HomeController {
 	
 	@GetMapping("/home")	//src/main/webapp/WEB-INF/views/home.jsp
 	public void test() {
+		
 	}
-
+	
+	
 }
