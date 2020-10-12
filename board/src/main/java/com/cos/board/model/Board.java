@@ -2,6 +2,9 @@ package com.cos.board.model;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +17,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor	//default 생성자(파라메터x)
 @Builder	//빌더 패턴
 @Data
+@Entity
 public class Board {
+	@Id
 	private int id;
 	private String title;
 	private String content;
