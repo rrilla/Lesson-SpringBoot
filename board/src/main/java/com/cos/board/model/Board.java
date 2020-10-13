@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +28,12 @@ public class Board {
 	private int id;
 	private String title;
 	private String content;
-	private int readCoount;
+	private int readCount;
+	@CreationTimestamp	//default 현재시간 자동 적용
 	private Timestamp createDate;
+	
+//	public Timestamp getCreateDate() {
+//		//return "2020-11-11";
+//		return Timestamp.valueOf(createDate.toString().substring(0,10));
+//	}
 }
