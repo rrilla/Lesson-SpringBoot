@@ -77,26 +77,20 @@ public class BoardController {
 //			}
 //		);
 		
+//		Board board = boardRepository.findById(id)
+//				.orElseThrow(new Supplier<Exception>() {
+//
+//				@Override
+//				public Exception get() {
+//					return new Exception("id값 잘 못 들어옴.");
+//				}
+//			});
+		
 		Board board = boardRepository.findById(id)
-				.orElseThrow(new Supplier<Exception>() {
-
-				@Override
-				public Exception get() {
-					return new Exception("id값 잘 못 들어옴.");
-				}
-			});
+				.orElseThrow(() -> 
+					 new MyArgsNotFound("id값 잘못오ㅗㅅ다")
+				);
 		
-		//Board board = boardRepository.findById(id)
-		//		.orElseThrow()
-		
-		
-		
-//		if(opBoard.get() == null) {
-//			System.out.println("없다.");
-//		}else {
-//			System.out.println("있따.");
-//			model.addAttribute("board" , opBoard.get());
-//		}
 		model.addAttribute("board", board);
 		
 		return "detail";
@@ -107,7 +101,6 @@ public class BoardController {
 	public String delete(@PathVariable int id) {
 		boardRepository.deleteById(id);
 		return "ok";
-		
 	}
 	
 }
