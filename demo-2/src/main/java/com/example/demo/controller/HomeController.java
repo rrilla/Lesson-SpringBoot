@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PostRequestDto;
@@ -58,10 +59,11 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/test", consumes="application/json",method=RequestMethod.POST)
-	public String test(PostRequestDto postRequestDto) {
+	@ResponseBody
+	public PostRequestDto test(PostRequestDto postRequestDto) {
 		System.out.println("title : " +postRequestDto.getTitle());
 		System.out.println("content : " +postRequestDto.getContent());
-		return "success";
+		return postRequestDto;
 	}
 	
 }
