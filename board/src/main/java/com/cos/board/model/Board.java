@@ -39,12 +39,8 @@ public class Board {
 		//SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");
 		//String time[] = {sdf.format(createDate), sdf2.format(createDate)};
 		
+		//return createDate.toString().substring(0,10);
 		return sdf.format(createDate);
 	}
 	
-	
-//	public Timestamp getCreateDate() {
-//		//return "2020-11-11";
-//		return Timestamp.valueOf(createDate.toString().substring(0,10));
-//	}
 }

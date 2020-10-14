@@ -1,9 +1,13 @@
 package com.cos.board.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
-import javax.persistence.Entity;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cos.board.config.ex.MyArgsNotFound;
 import com.cos.board.dto.BoardSaveRequestDto;
+import com.cos.board.dto.ImageSaveDto;
 import com.cos.board.model.Board;
 import com.cos.board.repository.BoardRepository;
 
@@ -26,7 +31,7 @@ public class BoardService {
 		boardRepository.save(boardEntity);
 	}
 	
-	//acid 읽기인데도 왜 설정?
+	//acid? 읽기인데도 왜 설정?
 	//@Transactional(readOnly = true)
 	public List<Board> 글목록() {
 		return boardRepository.findAll();
@@ -37,8 +42,10 @@ public class BoardService {
 		Board board = boardRepository.findById(id)
 				.orElseThrow(() -> 
 					 new RuntimeException("id값 잘못옸다")
+					 //new Exception("id값 잘 못 들어옴.")/
+					 //new MyArgsNotFound("id잘못옴")
 				);
-		board.setReadCount(board.getReadCount()+1);
+		board.setReadCount(board.getReadCount()+1);	//조회수 증가
 		return board;
 	}
 	
@@ -57,7 +64,6 @@ public class BoardService {
 		//save할 때 id값이 db저장된 값과 동일할 시 자동으로 jpa에서 update실행
 		//근데 수정값을 받을 때 Board의 모든 값을 다 받아야 함.
 		
-		
 		//더티체킹
 		//Board boardEntity = boardRepository.findById(id)
 			//	.orElseThrow(()-> new RuntimeException("id값 잘못들어옴"));
@@ -71,7 +77,24 @@ public class BoardService {
 		return boardRepository.findByTitle(title);
 	}
 	
-	public void 파일(MultipartFile file) {
-		
+	public ImageSaveDto 이미지저장(MultipartFile multipartFile) {
+		ImageSaveDto dto = new ImageSaveDto();
+		String fileRoot = "C:/Users/user/Desktop/test/";	//저장될 외부 파일 경로
+		String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
+		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
+		String savedFileName = UUID.randomUUID() + extension;	//저장될 파일 명
+		File targetFile = new File(fileRoot + savedFileName);	
+		try {
+			InputStream fileStream = multipartFile.getInputStream();
+			FileUtils.copyInputStreamToFile(fileStream, targetFile);	//파일 저장
+			dto.setUrl("/summernoteImage/"+savedFileName);
+			dto.setResponseCode("success");
+		} catch (IOException e) {
+			FileUtils.deleteQuietly(targetFile);	//저장된 파일 삭제
+			dto.setResponseCode("error");
+			e.printStackTrace();
+		}
+		return dto;
 	}
+	
 }

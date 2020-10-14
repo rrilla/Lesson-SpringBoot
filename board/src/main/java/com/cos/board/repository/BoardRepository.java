@@ -29,7 +29,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer>{
 	//nativeQuery 내가만든쿼리 실행할지말지 default가 false
 	Board mFindById(int id);
 	
-	@Modifying	//수정,삭제,변경,저장 할 시 적용 - 커밋시켜줌
+	@Modifying	//수정,삭제,변경,저장 할 시 꼮! 적용 - 커밋시켜줌
 	@Query(value = "delete from board where id = :id", nativeQuery = true)
 	//int로 받으면 변경 행 갯수 리턴, -1은 에러
 	int mDeleteById(int id);

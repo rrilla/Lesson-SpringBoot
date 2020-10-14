@@ -14,46 +14,43 @@
 </main>
 
 <script>
-	$(document).ready(function() {
-		$('#summernote').summernote({
-			height: 300,                 // 에디터 높이
-			minHeight: null,             // 최소 높이
-			maxHeight: null,             // 최대 높이
-			focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
-			lang: "ko-KR",					// 한글 설정
-			placeholder: '최대 2048자까지 쓸 수 있습니다',	//placeholder 설정
-			callbacks : {
-				onImageUpload : function(files, editor, welEditable) {
-					for (var i = files.length - 1; i >= 0; i--) {
-						sendFile(files[i], this);
-					}
-				}
+
+//써머노트 적용
+$('#summernote').summernote({
+	height: 300,                 // 에디터 높이
+	minHeight: null,             // 최소 높이
+	maxHeight: null,             // 최대 높이
+	focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
+	lang: "ko-KR",					// 한글 설정
+	placeholder: '최대 2048자까지 쓸 수 있습니다',	//placeholder 설정
+	callbacks: {	//여기 부분이 이미지를 첨부하는 부분
+		onImageUpload : function(files) {
+			if(files.length > 1){
+				alert("파일 하나씩만 업로드가능 ㅜㅜ");
+				return false;
 			}
-		});
-	});
-
-	function sendFile(file, el) {
-		var form_data = new FormData();
-		form_data.append('file', file);
-		$.ajax({
-					data : form_data,
-					type : "POST",
-					url : '/image',
-					cache : false,
-					contentType : false,
-					enctype : 'multipart/form-data',
-					processData : false,
-					success : function(url) {
-						$(el).summernote('editor.insertImage', url);
-						$('#imageBoard > ul')
-						.append('<li><img src="'+url+'" width="480" height="auto"/></li>');
-					}
-				});
+			imageUpload(files[0], this);
+		}
 	}
-</script>
+});
 
-<script>
+//써머노트에 이미지업로드
+function imageUpload(file, editor) {
+	data = new FormData();
+	data.append("file", file);
+	$.ajax({
+		data : data,
+		type : "POST",
+		url : "/imageUpload",
+		contentType : false,
+		processData : false,
+		success : function(data) {
+			$(editor).summernote('insertImage', data.url);
+		}
+	});
+}
 
+//글 작성
 function save(){
 	let title = document.querySelector("#title").value;
 	let content = document.querySelector("#summernote").value;
