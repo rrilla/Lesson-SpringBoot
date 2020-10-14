@@ -2,6 +2,8 @@ package com.cos.board.service;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +43,8 @@ public class BoardService {
 	
 	@Transactional
 	public void 글삭제하기(int id) {
-		boardRepository.deleteById(id);
+		//boardRepository.deleteById(id);
+		boardRepository.mDeleteById(id);
 	}
 	
 	@Transactional
@@ -55,10 +58,15 @@ public class BoardService {
 		
 		
 		//더티체킹
-		Board boardEntity = boardRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("id값 잘못들어옴"));
+		//Board boardEntity = boardRepository.findById(id)
+			//	.orElseThrow(()-> new RuntimeException("id값 잘못들어옴"));
+		Board boardEntity = boardRepository.mFindById(id);
 		boardEntity.setTitle(dto.getTitle());
 		boardEntity.setContent(dto.getContent());
 		
+	}
+	
+	public Board 테스트(String title) {
+		return boardRepository.findByTitle(title);
 	}
 }

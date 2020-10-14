@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cos.board.config.ex.MyArgsNotFound;
 import com.cos.board.dto.BoardSaveRequestDto;
@@ -32,11 +35,12 @@ public class BoardController {
 	}
 	
 	@PostMapping("/save")
-	public String save(BoardSaveRequestDto dto) {
+	@ResponseBody
+	public String save(@RequestBody BoardSaveRequestDto dto) {
 		
 		boardService.글쓰기(dto);
 		
-		return "redirect:/list";
+		return "ok";
 	}
 	
 //	@PostMapping("/save2")
@@ -104,4 +108,13 @@ public class BoardController {
 		return "ok";
 	}
 	
+	@GetMapping("test")
+	@ResponseBody
+	public Board test() {
+		System.out.println(boardService.테스트("test"));
+		return boardService.테스트("test");
+	}
+	
+	
+
 }
