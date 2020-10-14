@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cos.board.config.ex.MyArgsNotFound;
 import com.cos.board.dto.BoardSaveRequestDto;
@@ -68,5 +69,9 @@ public class BoardService {
 	
 	public Board 테스트(String title) {
 		return boardRepository.findByTitle(title);
+	}
+	
+	public void 파일(MultipartFile file) {
+		
 	}
 }

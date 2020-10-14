@@ -8,6 +8,8 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+    converters:
+      preferred-json-mapper: gson
       
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

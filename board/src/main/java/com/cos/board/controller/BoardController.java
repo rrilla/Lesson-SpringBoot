@@ -1,6 +1,10 @@
 package com.cos.board.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cos.board.config.ex.MyArgsNotFound;
 import com.cos.board.dto.BoardSaveRequestDto;
 import com.cos.board.model.Board;
+import com.cos.board.model.UploadFile;
 import com.cos.board.repository.BoardRepository;
 import com.cos.board.service.BoardService;
+import com.google.gson.JsonObject;
 
 @Controller
 public class BoardController {
@@ -42,16 +48,6 @@ public class BoardController {
 		
 		return "ok";
 	}
-	
-//	@PostMapping("/save2")
-//	public String save2(Board board) {
-//		System.out.println(board.getTitle());
-//		System.out.println(board.getContent());
-//		
-//		boardRepository.save(board);
-//		
-//		return "list";
-//	}
 	
 	@GetMapping({"","/","/list"})	//중괄호 입력시 안에 여러주소 배열로 선언가능
 	public String list(Model model) {
@@ -88,9 +84,7 @@ public class BoardController {
 //					return new Exception("id값 잘 못 들어옴.");
 //				}
 //			});
-		
 		model.addAttribute("board", boardService.글상세보기(id));
-		
 		return "detail";
 	}
 	
@@ -114,6 +108,36 @@ public class BoardController {
 		System.out.println(boardService.테스트("test"));
 		return boardService.테스트("test");
 	}
+	
+	@PostMapping(value="/image", produces = "application/json")
+	@ResponseBody
+	public JsonObject uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile) {
+		
+		JsonObject jsonObject = new JsonObject();
+		
+		String fileRoot = "C:\\summernote_image\\";	//저장될 외부 파일 경로
+		String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
+		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
+				
+		String savedFileName = UUID.randomUUID() + extension;	//저장될 파일 명
+		
+		File targetFile = new File(fileRoot + savedFileName);	
+		
+		try {
+			InputStream fileStream = multipartFile.getInputStream();
+			FileUtils.copyInputStreamToFile(fileStream, targetFile);	//파일 저장
+			jsonObject.addProperty("url", "/summernoteImage/"+savedFileName);
+			jsonObject.addProperty("responseCode", "success");
+				
+		} catch (IOException e) {
+			FileUtils.deleteQuietly(targetFile);	//저장된 파일 삭제
+			jsonObject.addProperty("responseCode", "error");
+			e.printStackTrace();
+		}
+		
+		return jsonObject;
+	}
+
 	
 	
 

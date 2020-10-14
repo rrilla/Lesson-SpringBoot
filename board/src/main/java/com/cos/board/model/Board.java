@@ -35,8 +35,8 @@ public class Board {
 	
 	public String getCreateDate() {
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
+		//SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");
 		//String time[] = {sdf.format(createDate), sdf2.format(createDate)};
 		
 		return sdf.format(createDate);
