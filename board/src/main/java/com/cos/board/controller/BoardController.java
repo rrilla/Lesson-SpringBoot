@@ -1,6 +1,5 @@
 package com.cos.board.controller;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -11,18 +10,21 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.board.config.ex.MyArgsNotFound;
 import com.cos.board.dto.BoardSaveRequestDto;
 import com.cos.board.model.Board;
 import com.cos.board.repository.BoardRepository;
+import com.cos.board.service.BoardService;
 
 @Controller
 public class BoardController {
 
 	@Autowired
-	private BoardRepository boardRepository;
+	BoardService boardService;
 	
 	@GetMapping("/saveForm")
 	public String saveForm() {
@@ -31,10 +33,8 @@ public class BoardController {
 	
 	@PostMapping("/save")
 	public String save(BoardSaveRequestDto dto) {
-		System.out.println(dto);
 		
-		Board boardEntity = BoardSaveRequestDto.toEntity(dto);
-		boardRepository.save(boardEntity);
+		boardService.글쓰기(dto);
 		
 		return "redirect:/list";
 	}
@@ -49,10 +49,9 @@ public class BoardController {
 //		return "list";
 //	}
 	
-	@GetMapping("/list")
+	@GetMapping({"","/","/list"})	//중괄호 입력시 안에 여러주소 배열로 선언가능
 	public String list(Model model) {
-		List<Board> boards =  boardRepository.findAll();
-		model.addAttribute("boards", boards);
+		model.addAttribute("boards", boardService.글목록());
 		return "list";
 	}
 	
@@ -86,12 +85,7 @@ public class BoardController {
 //				}
 //			});
 		
-		Board board = boardRepository.findById(id)
-				.orElseThrow(() -> 
-					 new MyArgsNotFound("id값 잘못오ㅗㅅ다")
-				);
-		
-		model.addAttribute("board", board);
+		model.addAttribute("board", boardService.글상세보기(id));
 		
 		return "detail";
 	}
@@ -99,7 +93,14 @@ public class BoardController {
 	@DeleteMapping("board/{id}")
 	@ResponseBody
 	public String delete(@PathVariable int id) {
-		boardRepository.deleteById(id);
+		boardService.글삭제하기(id);
+		return "ok";
+	}
+	
+	@PutMapping("board/{id}")	//
+	@ResponseBody
+	public String update(@PathVariable int id, @RequestBody BoardSaveRequestDto dto) {
+		boardService.글수정하기(id, dto);
 		return "ok";
 	}
 	

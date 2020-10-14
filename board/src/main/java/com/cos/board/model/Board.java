@@ -1,6 +1,7 @@
 package com.cos.board.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,16 @@ public class Board {
 	private int readCount;
 	@CreationTimestamp	//default 현재시간 자동 적용
 	private Timestamp createDate;
+	
+	public String getCreateDate() {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");
+		//String time[] = {sdf.format(createDate), sdf2.format(createDate)};
+		
+		return sdf.format(createDate);
+	}
+	
 	
 //	public Timestamp getCreateDate() {
 //		//return "2020-11-11";
