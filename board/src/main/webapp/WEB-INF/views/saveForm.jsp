@@ -10,7 +10,7 @@
 	<textarea id="summernote" name="content"></textarea>
 	<br />
 	<div id="imageBoard"></div>
-	<button onclick="save()">글쓰기 완료</button>
+	 <button onclick="save()" type="button" class="btn btn-secondary">글쓰기 완료</button>
 </main>
 
 <script>

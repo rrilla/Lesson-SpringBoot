@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +35,8 @@ public class BoardService {
 	
 	//acid? 읽기인데도 왜 설정?
 	//@Transactional(readOnly = true)
-	public List<Board> 글목록() {
-		return boardRepository.findAll();
+	public Page<Board> 글목록(Pageable pageable) {
+		return boardRepository.findAll(pageable);
 	}
 	
 	@Transactional
@@ -79,7 +81,7 @@ public class BoardService {
 	
 	public ImageSaveDto 이미지저장(MultipartFile multipartFile) {
 		ImageSaveDto dto = new ImageSaveDto();
-		String fileRoot = "C:/Users/user/Desktop/test/";	//저장될 외부 파일 경로
+		String fileRoot = "C:/Users/admin/Desktop/test/";	//저장될 외부 파일 경로
 		String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
 		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
 		String savedFileName = UUID.randomUUID() + extension;	//저장될 파일 명

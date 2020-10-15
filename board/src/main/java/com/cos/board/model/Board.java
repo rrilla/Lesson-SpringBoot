@@ -3,6 +3,7 @@ package com.cos.board.model;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,6 +29,7 @@ public class Board {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	//해당 데이터베이스 번호증가 전략을 따라가기
 	private int id;
 	private String title;
+	//@Column(length = 10000000)
 	private String content;
 	private int readCount;
 	@CreationTimestamp	//default 현재시간 자동 적용
@@ -35,8 +37,8 @@ public class Board {
 	
 	public String getCreateDate() {
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH");
-		//SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		//SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");	//hh12,HH24
 		//String time[] = {sdf.format(createDate), sdf2.format(createDate)};
 		
 		//return createDate.toString().substring(0,10);

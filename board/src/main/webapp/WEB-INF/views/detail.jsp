@@ -21,8 +21,8 @@
 			<td>${board.createDate }</td>
 		</tr>
 	</table>
-	<button onclick="deleteBoard(${board.id})">삭제</button>
-	<button onclick="updateBoard(${board.id})">수정</button>
+	<button onclick="deleteBoard(${board.id})" type="button" class="btn btn-danger">삭제</button>
+	 <button onclick="updateBoard(${board.id})" type="button" class="btn btn-secondary">수정</button>
 </main>
 
 <script>
@@ -73,4 +73,3 @@
 </script>
 
 <%@include file="layout/footer.jsp" %>
-

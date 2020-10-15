@@ -2,6 +2,10 @@ package com.cos.board.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,9 +42,17 @@ public class BoardController {
 	}
 	
 	@GetMapping({"","/","/list"})	//중괄호 입력시 안에 여러주소 배열로 선언가능
-	public String list(Model model) {
-		model.addAttribute("boards", boardService.글목록());
+	public String list(Model model,
+			@PageableDefault(size = 5, sort = "id", direction = Direction.DESC ) Pageable pageable) {	//sort=정렬을 뭐로해서 페이징할지(모델의 pk, db의 칼럼명)
+		model.addAttribute("boards", boardService.글목록(pageable));
 		return "list";
+	}
+	
+	@GetMapping({"/list/test"})	//중괄호 입력시 안에 여러주소 배열로 선언가능
+	@ResponseBody
+	public Page<Board> listTest(
+			@PageableDefault(size = 5, sort = "id", direction = Direction.DESC ) Pageable pageable) {	//sort=정렬을 뭐로해서 페이징할지(모델의 pk, db의 칼럼명)
+		return boardService.글목록(pageable);
 	}
 	
 	@GetMapping("/detail/{id}")
