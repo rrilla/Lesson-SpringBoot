@@ -3,12 +3,13 @@ server:
   servlet:
     context-path: /
     
-spring:     
+spring:
+      
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/cos?serverTimezone=Asia/Seoul
     username: cos
-    password: bitc5600
+    password: bitc5600  #bitc5600 or 1234
     
   jpa:
     hibernate:

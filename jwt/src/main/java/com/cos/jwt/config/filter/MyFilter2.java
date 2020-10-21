@@ -9,16 +9,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-public class CorsFilter implements Filter {
+public class MyFilter2 implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		System.out.println("Cors 필터 실행");
+		System.out.println("필터2실행");
 		
 		HttpServletResponse res = (HttpServletResponse) response;
-		res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-		//res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+		res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
 		//res.setHeader("Access-Control-Allow-Origin", "*");
 		
 		chain.doFilter(request, response);		//다음 필터를 타라. (MyFilter2)

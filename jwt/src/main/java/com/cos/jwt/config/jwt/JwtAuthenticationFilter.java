@@ -1,5 +1,6 @@
 package com.cos.jwt.config.jwt;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -17,6 +18,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.cos.jwt.domain.person.Person;
 import com.cos.jwt.domain.person.PersonRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 
 public class JwtAuthenticationFilter implements Filter{
@@ -30,64 +32,72 @@ public class JwtAuthenticationFilter implements Filter{
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		System.out.println("JwtAuthenticationFilter 작동");
 		
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse resp = (HttpServletResponse) response;
-		PrintWriter out = resp.getWriter();
+		HttpServletResponse res = (HttpServletResponse) response;
+		res.setContentType("text/html; charset=utf-8");
+		PrintWriter out = res.getWriter();	//http body로 뿌릴꺼임
 		
 		String method = req.getMethod();
-		System.out.println(method);
 		if(!method.equals("POST")) {
-			System.out.println("post 요청이 아니기 때문에 거절");
-			out.print("required post method");
+			System.out.println("잘못된 요청, post만 가능");
+			out.print("post로 요청하셈.");
 			out.flush();
+			return;
 		}else {
-			System.out.println("post 요청이 맞습니다.");
+			System.out.println("post요청이 맞음!");
 			
 			ObjectMapper om = new ObjectMapper();
 			try {
 				Person person = om.readValue(req.getInputStream(), Person.class);
-				System.out.println(person); 
+				System.out.println(person);
+				String username = person.getUsername();
+				String password = person.getPassword();
+				//Person dbPerson = personRepository.findByUsernameAndPassword(username, password);
+				Person dbPerson = personRepository.check(username, password);
+				System.out.println(dbPerson);
 				
-				// 1번 username, password를 DB에 던짐
-				Person personEntity = 
-				personRepository.findByUsernameAndPassword(person.getUsername(), person.getPassword());
-				// 2번 값이 있으면 있다?. 없다?
-				if(personEntity == null) {
-					System.out.println("유저네임 혹은 패스워드가 틀렸습니다.");	
-					out.print("fail");
-					out.flush();
-				}else {
-					System.out.println("인증되었습니다.");
+				if(dbPerson != null) {
+					System.out.println("아디비번일치함.");
+					//String jwtHeader = "{\"alg\" : \"HS256\"}";
+					//String jwtMsg = "{\"userId\" : "+dbPerson.getId()+"}";
 					
 					String jwtToken = 
-							JWT.create()
-							.withSubject("토큰제목")
-							.withExpiresAt(new Date(System.currentTimeMillis()+1000*60*30))
-							.withClaim("id", personEntity.getId())
-							.withClaim("username", personEntity.getUsername())
-							.sign(Algorithm.HMAC512("비밀키"));
+							JWT.create().withSubject("토큰의제목-코스토큰")	//builder패턴
+							.withExpiresAt(new Date(System.currentTimeMillis()+1000*60*30))	//토큰유효기간 30분
+							.withClaim("id", dbPerson.getId())//with 비공개 클레임 ,넣고싶은거 다되는데 개인정보,중요한거 ㄴ
+							.withClaim("username", dbPerson.getUsername())
+							.sign(Algorithm.HMAC512("메돌이"));	//노출되면안됨.
 					
-					resp.addHeader("Authorization", "Bearer "+jwtToken);
+					res.addHeader("Authorization", "Bearer" + jwtToken);
 					out.print("ok");
 					out.flush();
+				}else {
+					System.out.println("아디비번틀림.");
+					out.print("no");
+					out.flush();
 				}
-			} catch (Exception e) {
-				System.out.println("오류 : "+e.getMessage());
+				//req.setAttribute("person", person);
+				
+				
+			}catch(Exception e){
+				System.out.println(e.getMessage());
 			}
 			
-//			StringBuilder data = new StringBuilder();
-//			BufferedReader br = req.getReader();
-//			String input = "";
-//			while((input = br.readLine()) != null) {
-//				data.append(input);
-//			}
-//			System.out.println(data.toString());
-//			
-//			Gson gson = new Gson();
-//			Person person = gson.fromJson(data.toString(), Person.class);
-//			System.out.println(person);
+			
+			/*StringBuilder data = new StringBuilder();
+			BufferedReader br = req.getReader();
+			String input = "";
+			while((input = br.readLine()) != null) {
+				data.append(input);
+			}
+			System.out.println(data.toString());
+			
+			Gson gson = new Gson();
+			Person person = gson.fromJson(data.toString(), Person.class);
+			System.out.println(person);*/
 		}
+		System.out.println("JwtAuthenticationFilter 동작");
 	}
+
 }
